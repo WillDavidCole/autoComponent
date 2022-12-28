@@ -5,19 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="Autocomplete.js"></script>
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body>
-
     <div id="autocomplete">
             <form autocomplete="off" action="/action_page.php">
-                <div class="autocomplete" style="width:300px;">
+                <div class="autocomplete" style="width:600px;">
                   <input id="myInput" type="text" name="myCountry" placeholder="Country">
                 </div>
                 <input type="submit">
           </form>
     </div>
 
-    <script>autocomplete(document.getElementById("myInput"), countries); </script>
+    <script>
+            autocomplete(document.getElementById("myInput"), countries, document.getElementById("myInput").value.length);
+            
+            /*document.getElementsByTagName("body").onkeydown = function (e)
+            {
+                if(e.target == document.getElementById("myInput"))
+                {
+                    if (e.value = '.')
+                    {
+                        autocomplete(document.getElementById("myInput"), countries, document.getElementById("myInput").value.length);   
+                    }
+                }
+            };*/
+
+    </script>
 </body>
 </html>

@@ -15,13 +15,16 @@ var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla"
 "United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
 
 
-function autocomplete(inp, arr) {
+function autocomplete(inp, arr, lm=0) {
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
     var currentFocus;
+    var currentValue;
+    var leftMargin = lm;
+
     /*execute a function when someone writes in the text field:*/
     inp.addEventListener("input",  function(e) {
-        var a, b, i, val = this.value;
+        var a, b, i, val = this.value.substring(this.leftMargin, this.value.length); // need to fix this tomorrow
         /*close any already open lists of autocompleted values*/
         closeAllLists();
         
@@ -31,6 +34,10 @@ function autocomplete(inp, arr) {
         a = document.createElement("DIV");
         a.setAttribute("id", this.id + "autocomplete-list");
         a.setAttribute("class", "autocomplete-items");
+        // a = document.getElementById('myInputautocomplete-list')
+        a.style.width = getMaximumArrayWidth(countries) + 'ch';
+        a.style.left = this.leftMargin;
+
         /*append the DIV element as a child of the autocomplete container:*/
         this.parentNode.appendChild(a);
         /*for each item in the array...*/
@@ -48,7 +55,7 @@ function autocomplete(inp, arr) {
             /*execute a function when someone clicks on the item value (DIV element):*/
                 b.addEventListener("click", function(e) {
                 /*insert the value for the autocomplete text field:*/
-                inp.value = this.getElementsByTagName("input")[0].value;
+                inp.value = this.currentValue + this.getElementsByTagName("input")[0].value;
                 /*close the list of autocompleted values,
                 (or any other open lists of autocompleted values:*/
                 closeAllLists();
@@ -75,11 +82,30 @@ function autocomplete(inp, arr) {
           /*and and make the current item more visible:*/
           removeActive(x);
           addActive(x);
-        } else if (e.keyCode == 13) {
+        }
+        else if (e.keyCode == 190) {
+            // e.preventDefault();
+            // if (currentFocus > -1) {
+            //   if (x) 
+            //       {
+            //           x[currentFocus].click();
+            //       }
+            // }
+
+            this.leftMargin = document.getElementById("myInput").value.length + 1;
+            // console.log(this.leftMargin);
+            // removeActive(x);
+            // autocomplete(document.getElementById("myInput"), countries, leftMargin, leftMargin);
+          } 
+          else if (e.keyCode == 13) {
           /*If the ENTER key is pressed, prevent the form from being submitted,*/
           e.preventDefault();
           if (currentFocus > -1) {
-            if (x) x[currentFocus].click();
+            if (x) 
+                {
+                    x[currentFocus].click(); //.click();
+                    this.currentValue = this.getElementsByTagName("input")[0].value;
+                }
           }
         }
     });
@@ -115,6 +141,13 @@ function autocomplete(inp, arr) {
       }
     }
   }
+
+  function getMaximumArrayWidth(array)
+  {
+    longest = array.reduce((r,s) => r.length > s.length ? r : s, 0);
+    return longest.length;
+  }
+
   /*execute a function when someone clicks in the document:*/
   document.addEventListener("click", function (e) {
       closeAllLists(e.target);
