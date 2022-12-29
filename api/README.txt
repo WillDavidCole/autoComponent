@@ -6,7 +6,10 @@ pipenv install --python 3.7
 pipenv shell
 pipenv install -r requirements.txt
 
-# To run the flask api from cmd in .api/ - simply issue the following command:
-flask run
+# To run the flask api from cmd in .api/ - simply issue the following commands:
+    # to start the virtual env:
+        pipenv shell
+    # starts the api:
+        flask run 
 
 ## NOTE => the above assumes that flask, flask-restful and SQLAlchemy have been installed from 'requirements.txt'
