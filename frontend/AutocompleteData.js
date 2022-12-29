@@ -52,3 +52,8 @@ argument_validations = {
   nodestep:"^[a-z,A-Z]", // any integer
   enhanceddatastep:"^[a-z,A-Z]"
 }
+
+window.onload = function() {
+  // Make an api call to get frequently updated components - calculations, enhanced data - based on the run selected, model parameters, nodes based on the run model
+  yourFunction(param1, param2);
+};

@@ -22,7 +22,7 @@ var state = {
     symbols: [')','.']
 }
 
-function autocomplete(inp, arr, lm=0) {
+function autocomplete(inp, arr) {
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
     var currentFocus;
