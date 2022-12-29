@@ -15,16 +15,22 @@ var countries = ["Afghanistan","Albania","Algeria","Andorra","Angola","Anguilla"
 "United Kingdom","United States of America","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Virgin Islands (US)","Yemen","Zambia","Zimbabwe"];
 
 
+var state = {
+    currentValue:'',
+    currentExpression:'',
+    leftMargin:0,
+    symbols: [')','.']
+}
+
 function autocomplete(inp, arr, lm=0) {
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
     var currentFocus;
-    var currentValue;
-    var leftMargin = lm;
+    this.currentValue = '';
 
     /*execute a function when someone writes in the text field:*/
     inp.addEventListener("input",  function(e) {
-        var a, b, i, val = this.value.substring(this.leftMargin, this.value.length); // need to fix this tomorrow
+        var a, b, i, val = this.value.substring(state.leftMargin, this.value.length); // need to fix this tomorrow
         /*close any already open lists of autocompleted values*/
         closeAllLists();
         
@@ -36,7 +42,7 @@ function autocomplete(inp, arr, lm=0) {
         a.setAttribute("class", "autocomplete-items");
         // a = document.getElementById('myInputautocomplete-list')
         a.style.width = getMaximumArrayWidth(countries) + 'ch';
-        a.style.left = this.leftMargin;
+        a.style.left = Math.min(65,state.leftMargin) + 'ex';
 
         /*append the DIV element as a child of the autocomplete container:*/
         this.parentNode.appendChild(a);
@@ -55,7 +61,19 @@ function autocomplete(inp, arr, lm=0) {
             /*execute a function when someone clicks on the item value (DIV element):*/
                 b.addEventListener("click", function(e) {
                 /*insert the value for the autocomplete text field:*/
-                inp.value = this.currentValue + this.getElementsByTagName("input")[0].value;
+                if (state.currentExpression != '')
+                {
+                    inp.value = state.currentExpression + this.getElementsByTagName("input")[0].value; // + '.' to be replaced by a lookup function
+                }
+                else
+                {
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                }
+
+                reviseState(inp,state);
+                // state.pastValue = state.currentValue;
+                // state.currentValue =  inp.value;
+                // state.leftMargin = this.getElementsByTagName("input")[0].value.length;
                 /*close the list of autocompleted values,
                 (or any other open lists of autocompleted values:*/
                 closeAllLists();
@@ -68,6 +86,11 @@ function autocomplete(inp, arr, lm=0) {
     inp.addEventListener("keydown", function(e) {
         var x = document.getElementById(this.id + "autocomplete-list");
         if (x) x = x.getElementsByTagName("div");
+
+        // reassess the expression, determine the input list
+        // console.log(state.currentValue + ' ' + state.leftMargin)
+        // console.log(state.currentValue + ' ' + state.leftMargin)
+
         if (e.keyCode == 40) {
           /*If the arrow DOWN key is pressed,
           increase the currentFocus variable:*/
@@ -84,30 +107,24 @@ function autocomplete(inp, arr, lm=0) {
           addActive(x);
         }
         else if (e.keyCode == 190) {
-            // e.preventDefault();
-            // if (currentFocus > -1) {
-            //   if (x) 
-            //       {
-            //           x[currentFocus].click();
-            //       }
-            // }
-
-            this.leftMargin = document.getElementById("myInput").value.length + 1;
-            // console.log(this.leftMargin);
-            // removeActive(x);
-            // autocomplete(document.getElementById("myInput"), countries, leftMargin, leftMargin);
-          } 
-          else if (e.keyCode == 13) {
+            state.leftMargin = state.currentValue.length + 1;
+        } 
+        else if (e.keyCode == 13) {
           /*If the ENTER key is pressed, prevent the form from being submitted,*/
           e.preventDefault();
           if (currentFocus > -1) {
             if (x) 
                 {
+
                     x[currentFocus].click(); //.click();
-                    this.currentValue = this.getElementsByTagName("input")[0].value;
+                //    this.currentValue = this.getElementsByTagName("input")[0].value;
+                    // this.currentValue = this.getElementsByTagName("input")[0].value;
                 }
           }
         }
+
+        reviseState(inp, state, e.keyCode); //state.currentValue = getLatestExpressionState(document.getElementById("myInput").value, document.getElementById("myInput").selectionStart);
+        
     });
 
 
@@ -148,6 +165,34 @@ function autocomplete(inp, arr, lm=0) {
     return longest.length;
   }
 
+  
+  function getLastIndexOf(lookupArray, symbols)
+  {
+    var b = lookupArray.split('').reverse();
+    for(i = 0; i < b.length; i++)
+    { 
+        for(x = 0; x < symbols.length; x++ )
+        {
+            if(b[i] == symbols[x] )
+            { 
+                return (b.length - i);
+            } 
+        }
+    }
+    return 0;
+  }
+
+  function reviseState(inp, state, keycode=0)
+  {
+        state.currentValue = inp.value.substring(0, inp.selectionStart);
+        let expressionLength = keycode === 190 ? (state.currentValue.length) : getLastIndexOf(state.currentValue,state.symbols);
+        if(expressionLength > 0 && expressionLength != state.leftMargin)
+        {
+            state.leftMargin = expressionLength;
+            state.currentExpression = state.currentValue.substring(0,state.leftMargin);
+        }
+  }
+  
   /*execute a function when someone clicks in the document:*/
   document.addEventListener("click", function (e) {
       closeAllLists(e.target);
