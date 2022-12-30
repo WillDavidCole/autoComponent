@@ -185,11 +185,16 @@ function autocomplete(inp, arr) {
   function reviseState(inp, state, keycode=0)
   {
         state.currentValue = inp.value.substring(0, inp.selectionStart);
-        let expressionLength = keycode === 190 ? (state.currentValue.length) : getLastIndexOf(state.currentValue,state.symbols);
-        if(expressionLength > 0 && expressionLength != state.leftMargin)
+        
+        if(keycode === 190)
         {
-            state.leftMargin = expressionLength;
-            state.currentExpression = state.currentValue.substring(0,state.leftMargin);
+          state.leftMargin = state.currentValue.length;
+          state.currentExpression = state.currentValue;
+        }
+        else
+        {
+          state.leftMargin = getLastIndexOf(state.currentValue,state.symbols);
+          state.currentExpression = state.currentValue.substring(0,state.leftMargin);
         }
   }
   

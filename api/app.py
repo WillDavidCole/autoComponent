@@ -41,10 +41,19 @@ class Runs(Resource):
         all_runs = cur.execute('SELECT * FROM RunInputs;').fetchall()
         results = [tuple(row) for row in all_runs]
         return jsonify(results)
+    
+class Calculations(Resource):
+    def get(self):
+        cur = conn.cursor()
+        all_calcs = cur.execute('SELECT * FROM Calculations;').fetchall()
+        results = [tuple(row) for row in all_calcs]
+        return jsonify(results)
 
 # Adding the api resources
 api.add_resource(RunId, "/Run/<int:RunId>")
 api.add_resource(Runs,"/")
+api.add_resource(Calculations,"/Calculations")
+
 
 # start
 if __name__ == '__main__':

@@ -55,5 +55,10 @@ argument_validations = {
 
 window.onload = function() {
   // Make an api call to get frequently updated components - calculations, enhanced data - based on the run selected, model parameters, nodes based on the run model
-  yourFunction(param1, param2);
+  axios
+  .get("http://127.0.0.1:5000/api/calculations")
+  .then(function (response) {
+    // create a new data object to accommodate the data (calcs, enhanced data, etc)
+    
+  });
 };
