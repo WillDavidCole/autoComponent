@@ -2,8 +2,12 @@
 This script runs the application using a development server.
 It contains the definition of routes and views for the application.
 """
+from urllib import response
 from flask import Flask
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 # Make the WSGI interface available at the top level so wfastcgi can get it.
 wsgi_app = app.wsgi_app
@@ -45,9 +49,11 @@ class Runs(Resource):
 class Calculations(Resource):
     def get(self):
         cur = conn.cursor()
-        all_calcs = cur.execute('SELECT * FROM Calculations;').fetchall()
+        all_calcs = cur.execute('SELECT * FROM [_lib_Snapshot].[Calculation];').fetchall()
         results = [tuple(row) for row in all_calcs]
-        return jsonify(results)
+        response = jsonify(results)
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
 
 # Adding the api resources
 api.add_resource(RunId, "/Run/<int:RunId>")
