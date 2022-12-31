@@ -22,11 +22,23 @@ var state = {
     symbols: [')','.']
 }
 
+// window.onload = function() {
+//   // Make an api call to get frequently updated components - calculations, enhanced data - based on the run selected, model parameters, nodes based on the run model
+//   // axios
+//   // .get("http://127.0.0.1:5000/api/calculations")
+//   // .then(function (response) {
+//     // create a new data object to accommodate the data (calcs, enhanced data, etc)
+//     console.log('working');
+//     console.log(templates);
+    
+//   };
+
 function autocomplete(inp, arr) {
     /*the autocomplete function takes two arguments,
     the text field element and an array of possible autocompleted values:*/
     var currentFocus;
     this.currentValue = '';
+    // console.log(calculations);
 
     /*execute a function when someone writes in the text field:*/
     inp.addEventListener("input",  function(e) {
@@ -185,7 +197,7 @@ function autocomplete(inp, arr) {
   function reviseState(inp, state, keycode=0)
   {
         state.currentValue = inp.value.substring(0, inp.selectionStart);
-        
+
         if(keycode === 190)
         {
           state.leftMargin = state.currentValue.length;

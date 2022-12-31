@@ -53,12 +53,13 @@ argument_validations = {
   enhanceddatastep:"^[a-z,A-Z]"
 }
 
+var calculations;
+
 window.onload = function() {
   // Make an api call to get frequently updated components - calculations, enhanced data - based on the run selected, model parameters, nodes based on the run model
   axios
-  .get("http://127.0.0.1:5000/api/calculations")
+  .get("http://127.0.0.1:5000/Calculations")
   .then(function (response) {
-    // create a new data object to accommodate the data (calcs, enhanced data, etc)
-    
-  });
-};
+    calculations = response;
+    })
+  };
